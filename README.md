@@ -3,7 +3,7 @@
 Project Title and Group Details<br>
 Application Name: CineDeb<br>
 Group Number: 4<br>
-Members: Ediz Karlı 33806, Muhammad Basil Khan 33540, Humayl Hafeez Soomro 33548, İzzet Balçık<br>
+Members: Ediz Karlı 33806, Muhammad Basil Khan 33540, Humayl Hafeez Soomro 33548, İzzet Balçık 33778 <br>
 App Overview <br>
 Traditional movie review platforms such as IMDb or Letterboxd display reviews as isolated opinions. If users want to debate a review, conversations happen in chaotic comment sections that easily drift off the topic and comments mix with each other. There is no structured way for movie lovers to challenge or refine specific critiques.<br>
 CineDeb is a mobile application designed for structured movie discussions. Users can discover films, read reviews and write Counter-Reviews directly beneath existing critiques. To maintain high quality debates and keep mobile reading comfortable, Counter-Reviews are strictly limited to a single level debate depth where the original critic and the counter reviewer can talk.<br>
