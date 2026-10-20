@@ -1,7 +1,7 @@
 # CS310-Project_Group-4
 2026-2027 CS310 Project Group #4 Repo <br>
 Project Title and Group Details<br>
-Application Name: CineDed<br>
+Application Name: CineDeb<br>
 Group Number: 4<br>
 Members: Ediz Karlı 33806, Muhammad Basil Khan 33540, Humayl Hafeez Soomro 33548, İzzet Balçık<br>
 App Overview <br>
