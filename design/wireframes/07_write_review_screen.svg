@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="844" viewBox="0 0 390 844">
+<rect id="Background" x="0" y="0" width="390" height="844" fill="#FFFFFF"/>
+<g id="Top Bar">
+<rect id="Back Button" x="16" y="15" width="76" height="44" fill="#FFFFFF" stroke="#000000"/>
+<text x="28" y="42" font-family="Space Mono" font-size="12" font-weight="400" fill="#000">&lt; BACK</text>
+<text x="106" y="36" font-family="Geist" font-size="20" font-weight="700" fill="#000">Write a Review</text>
+<text x="106" y="53" font-family="Space Mono" font-size="10" font-weight="400" fill="#5D5E66">MOVIE NAME</text>
+<line x1="0" y1="73" x2="390" y2="73" stroke="#000000"/>
+</g>
+<g id="Movie Summary Row">
+<rect x="16" y="89" width="48" height="72" fill="#E6E6E6" stroke="#000000"/>
+<line x1="16" y1="89" x2="64" y2="161" stroke="#000000"/>
+<line x1="64" y1="89" x2="16" y2="161" stroke="#000000"/>
+<text x="76" y="112" font-family="Geist" font-size="16" font-weight="700" fill="#000">Movie Name</text>
+<text x="76" y="130" font-family="Space Mono" font-size="10" font-weight="400" fill="#5D5E66">RELEASED 2010</text>
+<text x="76" y="146" font-family="Space Mono" font-size="10" font-weight="400" fill="#5D5E66">SCI-FI · ACTION · THRILLER</text>
+</g>
+<line x1="16" y1="177" x2="374" y2="177" stroke="#D9D9D9"/>
+<g id="Rating Field">
+<text x="16" y="203" font-family="Inter" font-size="12" font-weight="500" fill="#000">Your Rating*</text>
+<text x="320" y="203" font-family="Space Mono" font-size="9" font-weight="400" fill="#5D5E66">*REQUIRED</text>
+<g id="Rating 1"><rect x="16" y="215" width="32" height="40" fill="#FFFFFF" stroke="#000000"/><text x="28" y="240" font-family="Geist" font-size="14" font-weight="500" fill="#000">1</text></g><g id="Rating 2"><rect x="52.2" y="215" width="32" height="40" fill="#FFFFFF" stroke="#000000"/><text x="64.2" y="240" font-family="Geist" font-size="14" font-weight="500" fill="#000">2</text></g><g id="Rating 3"><rect x="88.4" y="215" width="32" height="40" fill="#FFFFFF" stroke="#000000"/><text x="100.4" y="240" font-family="Geist" font-size="14" font-weight="500" fill="#000">3</text></g><g id="Rating 4"><rect x="124.7" y="215" width="32" height="40" fill="#FFFFFF" stroke="#000000"/><text x="136.7" y="240" font-family="Geist" font-size="14" font-weight="500" fill="#000">4</text></g><g id="Rating 5"><rect x="160.9" y="215" width="32" height="40" fill="#FFFFFF" stroke="#000000"/><text x="172.9" y="240" font-family="Geist" font-size="14" font-weight="500" fill="#000">5</text></g><g id="Rating 6"><rect x="197.1" y="215" width="32" height="40" fill="#FFFFFF" stroke="#000000"/><text x="209.1" y="240" font-family="Geist" font-size="14" font-weight="500" fill="#000">6</text></g><g id="Rating 7"><rect x="233.3" y="215" width="32" height="40" fill="#FFFFFF" stroke="#000000"/><text x="245.3" y="240" font-family="Geist" font-size="14" font-weight="500" fill="#000">7</text></g><g id="Rating 8"><rect x="269.6" y="215" width="32" height="40" fill="#000000" stroke="#000000"/><text x="281.6" y="240" font-family="Geist" font-size="14" font-weight="500" fill="#FFFFFF">8</text></g><g id="Rating 9"><rect x="305.8" y="215" width="32" height="40" fill="#FFFFFF" stroke="#000000"/><text x="317.8" y="240" font-family="Geist" font-size="14" font-weight="500" fill="#000">9</text></g><g id="Rating 10"><rect x="342" y="215" width="32" height="40" fill="#FFFFFF" stroke="#000000"/><text x="350" y="240" font-family="Geist" font-size="14" font-weight="500" fill="#000">10</text></g>
+<text x="16" y="276" font-family="Space Mono" font-size="10" font-weight="400" fill="#5D5E66">SELECTED: 8 / 10</text>
+</g>
+<g id="Review Text Field">
+<text x="16" y="306" font-family="Inter" font-size="12" font-weight="500" fill="#000">Your Review*</text>
+<text x="320" y="306" font-family="Space Mono" font-size="9" font-weight="400" fill="#5D5E66">*REQUIRED</text>
+<rect x="16" y="318" width="358" height="170" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
+<text x="30" y="344" font-family="Inter" font-size="14" font-weight="400" fill="#1A1A1A">Great visuals and a clever story. The second</text><text x="30" y="366" font-family="Inter" font-size="14" font-weight="400" fill="#1A1A1A">half felt a bit long, but the ending made up</text><text x="30" y="388" font-family="Inter" font-size="14" font-weight="400" fill="#1A1A1A">for it.</text>
+<text x="316" y="478" font-family="Space Mono" font-size="9" font-weight="400" fill="#5D5E66">96 / 500</text>
+<text x="16" y="508" font-family="Space Mono" font-size="9" font-weight="400" fill="#5D5E66">MIN. 20 CHARACTERS</text>
+</g>
+<g id="Post Review Button">
+<rect x="16" y="526" width="358" height="48" fill="#000000"/>
+<text x="141" y="556" font-family="Geist" font-size="16" font-weight="500" fill="#FFFFFF">Post Review →</text>
+</g>
+<g id="Cancel Button">
+<rect x="16" y="586" width="358" height="44" fill="#FFFFFF" stroke="#000000"/>
+<text x="172" y="613" font-family="Geist" font-size="14" font-weight="500" fill="#000">Cancel</text>
+</g>
+<g id="Bottom Nav">
+<rect x="0" y="776" width="195" height="68" fill="#000000"/>
+<path d="M89 806 L97.5 798 L106 806 L106 816 L89 816 Z" fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-linejoin="round"/>
+<text x="85" y="832" font-family="Space Mono" font-size="10" font-weight="400" fill="#FFFFFF">HOME</text>
+<rect x="195" y="776" width="195" height="68" fill="#FFFFFF"/>
+<circle cx="292.5" cy="803" r="4.5" fill="none" stroke="#000000" stroke-width="1.5"/>
+<path d="M284 817 C284 810 301 810 301 817" fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round"/>
+<text x="271" y="832" font-family="Space Mono" font-size="10" font-weight="400" fill="#000">PROFILE</text>
+<line x1="0" y1="776.5" x2="390" y2="776.5" stroke="#000000"/>
+</g>
+
+</svg>
