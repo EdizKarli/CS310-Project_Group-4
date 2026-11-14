@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'screens/reviews_screen.dart';
+import 'screens/login_screen.dart';
 import 'utils/app_theme.dart';
 
 void main() {
@@ -16,9 +16,7 @@ class CineDebApp extends StatelessWidget {
       title: 'CineDeb',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.dark,
-      // TODO: replace with the Login screen.
-      // For now Reviews opens first so we can test it.
-      home: const ReviewsScreen(movieTitle: 'Inception'),
+      home: const LoginScreen(),
     );
   }
 }
