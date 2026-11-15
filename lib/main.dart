@@ -1,3 +1,4 @@
+import 'package:cinedeb/screens/reviews_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'screens/login_screen.dart';
@@ -16,7 +17,7 @@ class CineDebApp extends StatelessWidget {
       title: 'CineDeb',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.dark,
-      home: const LoginScreen(),
+      home: const ReviewsScreen(movieTitle: "Inception"),
     );
   }
 }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../models/counter_review.dart';
 import '../models/review.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_styles.dart';
+import '../widgets/review_widgets.dart';
+import 'counter_reviews_screen.dart';
 
 enum ReviewSort { newest, highestRating, mostLiked }
 
@@ -27,7 +30,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
           'days after watching it.',
       likes: 12,
       dislikes: 3,
-      counterCount: 5,
+      counterReviews: sampleCounterReviews(5),
     ),
     Review(
       id: 2,
@@ -37,7 +40,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
       text: 'Looks great but the plot is too confusing for me.',
       likes: 8,
       dislikes: 6,
-      counterCount: 2,
+      counterReviews: sampleCounterReviews(2),
     ),
     Review(
       id: 3,
@@ -104,9 +107,15 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
       ..showSnackBar(SnackBar(content: Text(text)));
   }
 
-  void _openCounterReviews(Review r) {
-    // TODO: push the Counter Reviews Screen when it is written.
-    _showMessage('Counter Reviews of ${r.username} will open here');
+  Future<void> _openCounterReviews(Review r) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (_) => CounterReviewsScreen(review: r),
+      ),
+    );
+    if (!mounted) return;
+    setState(() {});
   }
 
   void _openFilterSheet() {
@@ -152,7 +161,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: AppColors.surface,
-      isScrollControlled: true, // lets the sheet move up with the keyboard
+      isScrollControlled: true,
       builder: (BuildContext sheetContext) {
         return Padding(
           padding: EdgeInsets.only(
@@ -180,7 +189,16 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
               ElevatedButton(
                 onPressed: () {
                   if (controller.text.trim().isEmpty) return;
-                  setState(() => r.counterCount++);
+                  setState(() {
+                    r.counterReviews.insert(
+                      0,
+                      CounterReview(
+                        username: 'you',
+                        date: DateTime.now(),
+                        text: controller.text.trim(),
+                      ),
+                    );
+                  });
                   Navigator.pop(sheetContext);
                   _showMessage('Counter review posted');
                 },
@@ -199,9 +217,6 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        // Flutter adds a back arrow by itself only when there is a previous
-        // screen. We add it here so it is always visible. maybePop does
-        // nothing if there is no screen to go back to.
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           tooltip: 'Back',
@@ -239,11 +254,9 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
         },
       ),
 
-      // Bottom bar. Reviews is part of the Home section, so Home is selected.
       bottomNavigationBar: NavigationBar(
         selectedIndex: 0,
         onDestinationSelected: (int index) {
-          // TODO: go to Home (index 0) or Profile (index 1) screen.
           _showMessage(index == 0 ? 'Home will open here' : 'Profile will open here');
         },
         destinations: const <Widget>[
@@ -254,7 +267,6 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
     );
   }
 }
-
 
 class _ReviewCard extends StatefulWidget {
   const _ReviewCard({
@@ -278,16 +290,10 @@ class _ReviewCard extends StatefulWidget {
 class _ReviewCardState extends State<_ReviewCard> {
   bool _expanded = false;
 
-  String _formatDate(DateTime d) {
-    final String day = d.day.toString().padLeft(2, '0');
-    final String month = d.month.toString().padLeft(2, '0');
-    return '$day/$month/${d.year}';
-  }
-
   @override
   Widget build(BuildContext context) {
     final Review r = widget.review;
-    final bool isLong = r.text.length > 120; // needs "Read more"
+    final bool isLong = r.text.length > 120;
 
     return Card(
       child: Padding(
@@ -295,30 +301,13 @@ class _ReviewCardState extends State<_ReviewCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            // Row 1: avatar, username + date, rating
-            Row(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 18,
-                  backgroundColor: AppColors.surfaceLight,
-                  child: Text(r.username[0].toUpperCase(), style: AppText.label),
-                ),
-                const SizedBox(width: AppSpacing.s),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(r.username, style: AppText.label),
-                      Text(_formatDate(r.date), style: AppText.caption),
-                    ],
-                  ),
-                ),
-                _RatingBadge(rating: r.rating),
-              ],
+            AuthorRow(
+              username: r.username,
+              date: r.date,
+              trailing: RatingBadge(rating: r.rating),
             ),
             const SizedBox(height: AppSpacing.s),
 
-            // Row 2: review text, cut after 3 lines unless expanded
             Text(
               r.text,
               style: AppText.body,
@@ -333,29 +322,28 @@ class _ReviewCardState extends State<_ReviewCard> {
               ),
             const SizedBox(height: AppSpacing.s),
 
-            // Row 3: buttons (Wrap moves them to a new line if needed)
             Wrap(
               spacing: AppSpacing.s,
               runSpacing: AppSpacing.s,
               children: <Widget>[
-                _PillButton(
+                PillButton(
                   icon: Icons.thumb_up_alt_outlined,
                   label: 'Like ${r.likes}',
                   selected: r.isLiked,
                   onTap: widget.onLike,
                 ),
-                _PillButton(
+                PillButton(
                   icon: Icons.thumb_down_alt_outlined,
                   label: 'Dislike ${r.dislikes}',
                   selected: r.isDisliked,
                   onTap: widget.onDislike,
                 ),
-                _PillButton(
+                PillButton(
                   icon: Icons.forum_outlined,
                   label: '${r.counterCount} Counter Reviews',
                   onTap: widget.onCounterReviews,
                 ),
-                _PillButton(
+                PillButton(
                   icon: Icons.bolt_rounded,
                   label: 'Challenge',
                   outlined: true,
@@ -364,71 +352,6 @@ class _ReviewCardState extends State<_ReviewCard> {
               ],
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _RatingBadge extends StatelessWidget {
-  const _RatingBadge({required this.rating});
-
-  final int rating;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: AppColors.redSoft,
-        borderRadius: BorderRadius.circular(AppRadius.l),
-      ),
-      child: Text('★ $rating/10', style: AppText.label),
-    );
-  }
-}
-
-class _PillButton extends StatelessWidget {
-  const _PillButton({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-    this.selected = false,
-    this.outlined = false,
-  });
-
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-  final bool selected;
-  final bool outlined;
-
-  @override
-  Widget build(BuildContext context) {
-    Color background = AppColors.surfaceLight;
-    if (selected) background = AppColors.red;
-    if (outlined) background = Colors.transparent;
-
-    final Color foreground = outlined ? AppColors.red : AppColors.white;
-
-    return Material(
-      color: background,
-      shape: StadiumBorder(
-        side: outlined ? const BorderSide(color: AppColors.red) : BorderSide.none,
-      ),
-      child: InkWell(
-        onTap: onTap,
-        customBorder: const StadiumBorder(),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Icon(icon, size: 16, color: foreground),
-              const SizedBox(width: 6),
-              Text(label, style: AppText.label.copyWith(color: foreground)),
-            ],
-          ),
         ),
       ),
     );

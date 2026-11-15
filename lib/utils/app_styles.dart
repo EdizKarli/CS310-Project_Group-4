@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'app_colors.dart';
 
-/// Text styles.
 class AppText {
   AppText._();
 
@@ -22,7 +21,6 @@ class AppText {
       fontSize: 12, color: AppColors.textSecondary);
 }
 
-/// Spacing values for padding and gaps.
 class AppSpacing {
   AppSpacing._();
 
@@ -35,7 +33,6 @@ class AppSpacing {
   static const EdgeInsets screen = EdgeInsets.symmetric(horizontal: m);
 }
 
-/// Corner radius values.
 class AppRadius {
   AppRadius._();
 
