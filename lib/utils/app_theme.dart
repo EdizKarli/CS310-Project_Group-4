@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'app_styles.dart';
 
-/// Global theme. Standard Flutter widgets (ElevatedButton, OutlinedButton,
-/// TextButton, TextField, Chip, SegmentedButton, NavigationBar, AlertDialog,
-/// SnackBar, Card) get the CineDeb look automatically from here.
 class AppTheme {
   AppTheme._();
 
