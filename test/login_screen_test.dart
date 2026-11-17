@@ -88,4 +88,18 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Reviews'), findsOneWidget);
   });
+
+  testWidgets('LoginScreen opens ForgotPasswordScreen and returns', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(buildTestApp());
+
+    await tester.tap(find.text('Forgot Password?'));
+    await tester.pumpAndSettle();
+    expect(find.text('Reset Your Password'), findsOneWidget);
+
+    await tester.tap(find.text('Back to Log In'));
+    await tester.pumpAndSettle();
+    expect(find.text('Login to CineDeb'), findsOneWidget);
+  });
 }

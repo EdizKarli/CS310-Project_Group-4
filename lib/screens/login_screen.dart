@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_styles.dart';
 import '../widgets/auth_components.dart';
+import 'forgot_password_screen.dart';
 import 'reviews_screen.dart';
 import 'sign_up_screen.dart';
 
@@ -36,12 +37,6 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _showMessage(String text) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(text)));
-  }
-
   void _handleSignUpTap() {
     if (widget.onSignUpTap != null) {
       widget.onSignUpTap!();
@@ -55,8 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
       widget.onForgotPasswordTap!();
       return;
     }
-    // TODO: navigate to ForgotPasswordScreen once created.
-    _showMessage('Forgot Password screen will open here');
+    Navigator.of(context).push(authFadeRoute(const ForgotPasswordScreen()));
   }
 
   void _openAvailableHome() {
