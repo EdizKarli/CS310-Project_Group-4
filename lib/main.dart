@@ -17,7 +17,9 @@ class CineDebApp extends StatelessWidget {
       title: 'CineDeb',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.dark,
-      home: const ReviewsScreen(movieTitle: "Inception"),
+      // Let it be the login screen. 
+      // Just type anything in the username and password to get to the reviews screen.
+      home: const LoginScreen(),
     );
   }
 }
