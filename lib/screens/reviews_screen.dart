@@ -264,7 +264,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
               MaterialPageRoute<void>(builder: (_) => const ProfileScreen()),
             );
           } else {
-            _showMessage('Home will open here');
+            Navigator.popUntil(context, (Route<dynamic> route) => route.isFirst);
           }
         },
         destinations: const <Widget>[

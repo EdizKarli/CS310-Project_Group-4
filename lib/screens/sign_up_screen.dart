@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../utils/app_styles.dart';
 import '../widgets/auth_components.dart';
+import 'home_screen.dart';
 import 'login_screen.dart';
-import 'reviews_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({
@@ -43,12 +43,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
     Navigator.of(context).pushReplacement(authFadeRoute(const LoginScreen()));
   }
 
-  void _openAvailableHome() {
-    // TODO: navigate to Home/Discover screen once it is built.
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => const ReviewsScreen(movieTitle: 'Inception'),
-      ),
+  void _openHome() {
+    // Home becomes the first route, so Back does not return to Sign Up.
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute<void>(builder: (_) => const HomeScreen()),
+      (Route<dynamic> route) => false,
     );
   }
 
@@ -62,7 +61,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       widget.onSignUpSuccess!();
       return;
     }
-    _openAvailableHome();
+    _openHome();
   }
 
   @override
