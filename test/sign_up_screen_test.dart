@@ -40,6 +40,7 @@ void main() {
       buildTestApp(onSignUpSuccess: () => signedUp = true),
     );
 
+    await tester.ensureVisible(find.text('Create Account'));
     await tester.tap(find.text('Create Account'));
     await tester.pump();
     expect(find.text('Please enter a user handle'), findsOneWidget);
@@ -51,12 +52,13 @@ void main() {
     await tester.enterText(fields.at(0), '@cinephile');
     await tester.enterText(fields.at(1), 'user@cinedeb.app');
     await tester.enterText(fields.at(2), 'secretPW');
+    await tester.ensureVisible(find.text('Create Account'));
     await tester.tap(find.text('Create Account'));
     await tester.pump();
     expect(signedUp, isTrue);
   });
 
-  testWidgets('SignUpScreen valid submission opens ReviewsScreen', (
+  testWidgets('SignUpScreen valid submission opens HomeScreen', (
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(buildTestApp());
@@ -65,8 +67,9 @@ void main() {
     await tester.enterText(fields.at(0), '@cinephile');
     await tester.enterText(fields.at(1), 'user@cinedeb.app');
     await tester.enterText(fields.at(2), 'secretPW');
+    await tester.ensureVisible(find.text('Create Account'));
     await tester.tap(find.text('Create Account'));
     await tester.pumpAndSettle();
-    expect(find.text('Reviews'), findsOneWidget);
+    expect(find.text('What are we debating today?'), findsOneWidget);
   });
 }

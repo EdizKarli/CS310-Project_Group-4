@@ -44,6 +44,7 @@ void main() {
     );
 
     // Submitting empty form shows validation errors.
+    await tester.ensureVisible(find.text('Login'));
     await tester.tap(find.text('Login'));
     await tester.pump();
     expect(find.text('Please enter your email or @handle'), findsOneWidget);
@@ -60,12 +61,13 @@ void main() {
     final Finder fields = find.byType(TextFormField);
     await tester.enterText(fields.at(0), '@cinephile');
     await tester.enterText(fields.at(1), 'secretPW');
+    await tester.ensureVisible(find.text('Login'));
     await tester.tap(find.text('Login'));
     await tester.pump();
     expect(loggedIn, isTrue);
   });
 
-  testWidgets('LoginScreen switches to SignUpScreen and submits to ReviewsScreen', (
+  testWidgets('LoginScreen switches to SignUpScreen and submits to HomeScreen', (
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(buildTestApp());
@@ -76,17 +78,19 @@ void main() {
     expect(find.text('Create a CineDeb Account'), findsOneWidget);
 
     // Switch back to Login screen via Log In segment.
-    await tester.tap(find.text('Log In'));
+    // (Sign Up also has a "Log In" link at the bottom, so take the first.)
+    await tester.tap(find.text('Log In').first);
     await tester.pumpAndSettle();
     expect(find.text('Login to CineDeb'), findsOneWidget);
 
-    // Valid login submission navigates to ReviewsScreen.
+    // Valid login submission navigates to HomeScreen.
     final Finder fields = find.byType(TextFormField);
     await tester.enterText(fields.at(0), '@cinephile');
     await tester.enterText(fields.at(1), 'secretPW');
+    await tester.ensureVisible(find.text('Login'));
     await tester.tap(find.text('Login'));
     await tester.pumpAndSettle();
-    expect(find.text('Reviews'), findsOneWidget);
+    expect(find.text('What are we debating today?'), findsOneWidget);
   });
 
   testWidgets('LoginScreen opens ForgotPasswordScreen and returns', (
