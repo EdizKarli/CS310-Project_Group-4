@@ -5,6 +5,7 @@ import '../models/review.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_styles.dart';
 import '../widgets/review_widgets.dart';
+import 'profile_screen.dart';
 
 class CounterReviewsScreen extends StatefulWidget {
   const CounterReviewsScreen({super.key, required this.review});
@@ -168,8 +169,14 @@ class _CounterReviewsScreenState extends State<CounterReviewsScreen> {
       bottomNavigationBar: NavigationBar(
         selectedIndex: 0,
         onDestinationSelected: (int index) {
-          _showMessage(
-              index == 0 ? 'Home will open here' : 'Profile will open here');
+          if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute<void>(builder: (_) => const ProfileScreen()),
+            );
+          } else {
+            _showMessage('Home will open here');
+          }
         },
         destinations: const <Widget>[
           NavigationDestination(icon: Icon(Icons.home_outlined), label: 'Home'),
