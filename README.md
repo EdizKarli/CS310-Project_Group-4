@@ -83,3 +83,48 @@ Film enthusiasts and casual moviegoers who want to read balanced viewpoints inst
 4. On Movie Detail, the user reads the top reviews or taps **Write a Review**.
 5. Any review can be challenged from **Reviews** or **Counter Reviews**.
 6. The bottom bar switches between **Home** and **Profile**. **Log Out** on Profile goes back to Login.
+
+## Getting Started
+
+### Requirements
+
+| Tool | Version we use |
+|------|----------------|
+| Flutter | **3.50.0** (stable channel) |
+| Dart | 3.14.0 (comes with Flutter) |
+| Android SDK | API 36 (installed with Android Studio) |
+| Emulator | Pixel 9a, Android API 36 |
+
+Check your setup with:
+
+```bash
+flutter --version
+flutter doctor
+```
+
+### Run the app
+
+1. Clone the repository and open the folder:
+   ```bash
+   git clone https://github.com/EdizKarli/CS310-Project_Group-4.git
+   cd CS310-Project_Group-4
+   ```
+2. Install the packages:
+   ```bash
+   flutter pub get
+   ```
+3. Start an Android emulator, either from Android Studio (**Device Manager → ▶**) or from the terminal:
+   ```bash
+   flutter emulators                         # list your emulators
+   flutter emulators --launch <emulator_id>  # e.g. Pixel_9a
+   ```
+4. Run the app:
+   ```bash
+   flutter run
+   ```
+
+> The project is set up for **Android** and was tested on an Android emulator.
+
+### Logging in
+
+Authentication is added in Step 3, so for now **any non-empty handle and password** logs you in. On Sign Up, the email has to look like an email and the password needs at least 6 characters.
