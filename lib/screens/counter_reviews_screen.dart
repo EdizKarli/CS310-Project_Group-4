@@ -7,9 +7,11 @@ import '../utils/app_styles.dart';
 import '../widgets/review_widgets.dart';
 import 'profile_screen.dart';
 
+// Shows one review at the top and all the counter reviews written against it.
 class CounterReviewsScreen extends StatefulWidget {
   const CounterReviewsScreen({super.key, required this.review});
 
+  // The review being challenged. Its counter reviews are stored inside it.
   final Review review;
 
   @override
@@ -17,6 +19,7 @@ class CounterReviewsScreen extends StatefulWidget {
 }
 
 class _CounterReviewsScreenState extends State<CounterReviewsScreen> {
+  // You can like or dislike a counter review, but not both at the same time.
   void _toggleLike(CounterReview c) {
     setState(() {
       if (c.isLiked) {
@@ -49,19 +52,21 @@ class _CounterReviewsScreenState extends State<CounterReviewsScreen> {
     });
   }
 
+  // Small message that pops up at the bottom of the screen.
   void _showMessage(String text) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text(text)));
   }
 
+  // Opens a panel from the bottom where you can write a counter review.
   void _openChallengeSheet() {
     final TextEditingController controller = TextEditingController();
 
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: AppColors.surface,
-      isScrollControlled: true,
+      isScrollControlled: true, // so the panel moves up with the keyboard
       builder: (BuildContext sheetContext) {
         return Padding(
           padding: EdgeInsets.only(
@@ -89,12 +94,14 @@ class _CounterReviewsScreenState extends State<CounterReviewsScreen> {
               const SizedBox(height: AppSpacing.m),
               ElevatedButton(
                 onPressed: () {
+                  // Don't post empty counter reviews.
                   if (controller.text.trim().isEmpty) return;
                   setState(() {
+                    // New counter reviews go to the top of the list.
                     widget.review.counterReviews.insert(
                       0,
                       CounterReview(
-                        username: 'you',
+                        username: 'you', // placeholder until we have real accounts
                         date: DateTime.now(),
                         text: controller.text.trim(),
                       ),
@@ -133,6 +140,7 @@ class _CounterReviewsScreenState extends State<CounterReviewsScreen> {
         ),
       ),
 
+      // Original review first, then the list of counter reviews.
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.m),
         children: <Widget>[
@@ -144,6 +152,7 @@ class _CounterReviewsScreenState extends State<CounterReviewsScreen> {
           Text('${counters.length} Counter Reviews', style: AppText.title),
           const SizedBox(height: AppSpacing.s),
 
+          // Shown when nobody has challenged this review yet.
           if (counters.isEmpty)
             const Padding(
               padding: EdgeInsets.symmetric(vertical: AppSpacing.l),
@@ -154,6 +163,7 @@ class _CounterReviewsScreenState extends State<CounterReviewsScreen> {
               ),
             ),
 
+          // One card for each counter review.
           for (final CounterReview c in counters)
             Padding(
               padding: const EdgeInsets.only(bottom: AppSpacing.m),
@@ -169,6 +179,7 @@ class _CounterReviewsScreenState extends State<CounterReviewsScreen> {
       bottomNavigationBar: NavigationBar(
         selectedIndex: 0,
         onDestinationSelected: (int index) {
+          // Profile opens on top, Home goes back to the first screen.
           if (index == 1) {
             Navigator.push(
               context,
@@ -188,6 +199,7 @@ class _CounterReviewsScreenState extends State<CounterReviewsScreen> {
   }
 }
 
+// The review being challenged, with a red border so it stands out.
 class _OriginalReviewCard extends StatelessWidget {
   const _OriginalReviewCard({required this.review, required this.onChallenge});
 
@@ -217,6 +229,7 @@ class _OriginalReviewCard extends StatelessWidget {
               trailing: RatingBadge(rating: review.rating),
             ),
             const SizedBox(height: AppSpacing.s),
+            // Full text here, no "Read more" needed.
             Text(review.text, style: AppText.body),
             const SizedBox(height: AppSpacing.m),
             PillButton(
@@ -232,6 +245,7 @@ class _OriginalReviewCard extends StatelessWidget {
   }
 }
 
+// A single counter review with Like and Dislike buttons.
 class _CounterReviewCard extends StatefulWidget {
   const _CounterReviewCard({
     required this.counter,
@@ -248,12 +262,13 @@ class _CounterReviewCard extends StatefulWidget {
 }
 
 class _CounterReviewCardState extends State<_CounterReviewCard> {
+  // Becomes true after "Read more" is tapped.
   bool _expanded = false;
 
   @override
   Widget build(BuildContext context) {
     final CounterReview c = widget.counter;
-    final bool isLong = c.text.length > 120;
+    final bool isLong = c.text.length > 120; // long texts get a "Read more" button
 
     return Card(
       child: Padding(
