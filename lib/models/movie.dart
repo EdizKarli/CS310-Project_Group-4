@@ -21,6 +21,68 @@ class Movie {
 
   /// e.g. "Sci-Fi · Action"
   String get genreLabel => genres.join(' · ');
+
+  /// True if the search text matches the title, year or a genre.
+  /// A number up to 10 (e.g. "8" or "8.5") matches movies rated at least that.
+  bool matchesQuery(String query) {
+    final String q = query.trim().toLowerCase();
+    if (q.isEmpty) return true;
+    if (title.toLowerCase().contains(q)) return true;
+    if (year.toString().contains(q)) return true;
+    if (genres.any((String g) => g.toLowerCase().contains(q))) return true;
+
+    final double? minRating = double.tryParse(q);
+    return minRating != null && minRating <= 10 && rating >= minRating;
+  }
+}
+
+/// Release year filter on the Search Results screen.
+enum YearFilter {
+  any('Any'),
+  from2020('2020s'),
+  from2010('2010s'),
+  from2000('2000s'),
+  before2000('Before 2000');
+
+  const YearFilter(this.label);
+
+  final String label;
+
+  bool matches(int year) {
+    switch (this) {
+      case YearFilter.any:
+        return true;
+      case YearFilter.from2020:
+        return year >= 2020;
+      case YearFilter.from2010:
+        return year >= 2010 && year < 2020;
+      case YearFilter.from2000:
+        return year >= 2000 && year < 2010;
+      case YearFilter.before2000:
+        return year < 2000;
+    }
+  }
+}
+
+/// Minimum average rating filter on the Search Results screen.
+enum RatingFilter {
+  any('Any', 0),
+  sevenPlus('7+', 7),
+  eightPlus('8+', 8),
+  eightHalfPlus('8.5+', 8.5);
+
+  const RatingFilter(this.label, this.minRating);
+
+  final String label;
+  final double minRating;
+}
+
+/// Every genre used by [movies], sorted A–Z.
+List<String> allGenres(List<Movie> movies) {
+  final Set<String> genres = <String>{
+    for (final Movie movie in movies) ...movie.genres,
+  };
+  return genres.toList()..sort();
 }
 
 /// Ways a list of movies can be ordered (used on Home and Search Results).

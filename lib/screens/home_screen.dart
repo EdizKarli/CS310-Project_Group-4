@@ -13,6 +13,7 @@ import '../widgets/review_widgets.dart';
 import 'counter_reviews_screen.dart';
 import 'profile_screen.dart';
 import 'reviews_screen.dart';
+import 'search_results_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, this.username = 'cinedeb_user'});
@@ -88,11 +89,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _openSearch({String query = '', MovieSort sort = MovieSort.popular}) {
-    // TODO: open the Search Results screen once it is built.
-    _showMessage(
-      query.isEmpty
-          ? '${sort.label} movies will open here'
-          : 'Results for "$query" will open here',
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (_) => SearchResultsScreen(
+          initialQuery: query,
+          initialSort: sort,
+        ),
+      ),
     );
   }
 
