@@ -102,43 +102,6 @@ class QuickAccessTile extends StatelessWidget {
   }
 }
 
-/// Chip with a dropdown arrow that opens a picker, e.g. "Year: Any ⌄".
-/// Highlighted in red while [active] (a filter other than "Any" is set).
-class FilterDropdownChip extends StatelessWidget {
-  const FilterDropdownChip({
-    super.key,
-    required this.label,
-    required this.onTap,
-    this.active = false,
-  });
-
-  final String label;
-  final VoidCallback onTap;
-  final bool active;
-
-  @override
-  Widget build(BuildContext context) {
-    return FilterChip(
-      selected: active,
-      onSelected: (_) => onTap(),
-      label: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Flexible(
-            child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis),
-          ),
-          const SizedBox(width: 2),
-          const Icon(
-            Icons.keyboard_arrow_down_rounded,
-            size: 18,
-            color: AppColors.white,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 /// Bottom sheet that lets the user pick one option from a list.
 /// Returns the picked option, or null if the sheet was dismissed.
 Future<T?> showSelectionSheet<T>({
