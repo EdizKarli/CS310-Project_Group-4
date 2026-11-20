@@ -128,3 +128,21 @@ flutter doctor
 ### Logging in
 
 Authentication is added in Step 3, so for now **any non-empty handle and password** logs you in. On Sign Up, the email has to look like an email and the password needs at least 6 characters.
+
+## Testing
+
+Widget tests are in the `test/` folder. They check layout, navigation and form validation.
+
+```bash
+flutter test      # run all tests
+flutter analyze   # check the code for problems
+```
+
+## Troubleshooting
+
+| Problem | Fix |
+|---------|-----|
+| The emulator stays on a black screen or shows as `offline` | Cold boot it: Android Studio → Device Manager → ⋮ → **Cold Boot Now**, or run `<Android SDK>/emulator/emulator -avd <name> -no-snapshot-load`. |
+| The first launch shows the Flutter logo for a while | This is normal for a debug build. The first start can take 10–20 seconds. |
+| `flutter run` says no device is connected | Start the emulator first and check that it appears in `flutter devices`. |
+| Packages are missing or out of date | Run `flutter clean` and then `flutter pub get`. |
