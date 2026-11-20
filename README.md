@@ -36,3 +36,26 @@ In this step we turn the wireframes into a working Flutter interface:
 - Screens must work on small and large phones in portrait mode without overflow errors.
 - Include local and network images, a custom font, and a list of model objects shown in `Card` widgets with a working remove action.
 - Include a form with at least two fields, inline validation errors and a confirmation dialog after a valid submission.
+
+## About the App
+
+### The problem
+
+On platforms such as IMDb or Letterboxd, reviews are isolated opinions. If you disagree with a review, the discussion happens in a messy comment section that easily drifts off topic, and replies get mixed up. There is no structured way for movie lovers to challenge or refine a specific critique.
+
+### Our solution
+
+CineDeb is built for structured movie discussions. Users discover films, read reviews and write **counter-reviews** directly under an existing review. To keep debates focused and comfortable to read on a phone, counter-reviews are limited to **one level**: the original critic and the counter-reviewers talk under a single review, with no endless reply chains.
+
+### Who it is for
+
+Film enthusiasts and casual moviegoers who want to read balanced viewpoints instead of one-sided reviews, and who enjoy healthy debates about cinema.
+
+### Key features
+
+- **Discover movies** – Trending Now, Hot Debates and a sortable list of all movies on the Home screen.
+- **Search and filter** – search by title, year or rating, and filter the results by year, rating and genre.
+- **Reviews** – read reviews with a 1–10 rating, like or dislike them, and sort them.
+- **Counter-reviews** – challenge any review with a counter-review, one level deep.
+- **Write a review** – rate a movie from 1 to 10 and write a review of 20–500 characters.
+- **Profile** – see your stats, your reviews and your counter-reviews, and delete them.
