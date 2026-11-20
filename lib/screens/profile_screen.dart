@@ -7,6 +7,7 @@ import '../utils/app_styles.dart';
 import '../widgets/review_widgets.dart';
 import 'login_screen.dart';
 
+// The user's own page: stats, their reviews and counters, and log out.
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key, this.initialTab = 0});
 
@@ -17,6 +18,7 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
+// A review together with the movie it was written for.
 class _MyReview {
   _MyReview({required this.movieTitle, required this.review});
 
@@ -24,6 +26,7 @@ class _MyReview {
   final Review review;
 }
 
+// A counter review together with the movie and whose review it answers.
 class _MyCounter {
   _MyCounter({
     required this.movieTitle,
@@ -37,11 +40,13 @@ class _MyCounter {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  // Sample user info until we connect real accounts.
   final String _username = 'cinedeb_user';
   final DateTime _joinDate = DateTime(2026, 9, 1);
 
   late int _tab = widget.initialTab;
 
+  // Example data so the screen isn't empty.
   final List<_MyReview> _myReviews = <_MyReview>[
     _MyReview(
       movieTitle: 'Inception',
@@ -87,6 +92,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ),
   ];
 
+  // Adds up the likes from both reviews and counter reviews.
   int get _totalLikes {
     int total = 0;
     for (final _MyReview r in _myReviews) {
@@ -104,6 +110,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ..showSnackBar(SnackBar(content: Text(text)));
   }
 
+  // Delete just removes the card and shows a short message.
   void _deleteReview(_MyReview item) {
     setState(() => _myReviews.remove(item));
     _showMessage('Review deleted');
@@ -114,6 +121,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _showMessage('Counter review deleted');
   }
 
+  // Asks first, then goes back to Login and clears the screens behind it.
   Future<void> _confirmLogOut() async {
     final bool? confirmed = await showDialog<bool>(
       context: context,
@@ -133,6 +141,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
 
+    // Stop here if the user tapped Cancel.
     if (confirmed != true || !mounted) return;
 
     Navigator.pushAndRemoveUntil(
@@ -146,7 +155,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: false, // no back arrow, this is a main tab
         title: const Text('Profile'),
         actions: <Widget>[
           TextButton.icon(
@@ -177,6 +186,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
           const SizedBox(height: AppSpacing.l),
+          // Switch between My Reviews and My Counters.
           SegmentedButton<int>(
             segments: const <ButtonSegment<int>>[
               ButtonSegment<int>(value: 0, label: Text('My Reviews')),
@@ -193,6 +203,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       bottomNavigationBar: NavigationBar(
         selectedIndex: 1,
         onDestinationSelected: (int index) {
+          // Home goes back to the first screen.
           if (index == 0) {
             Navigator.popUntil(context, (Route<dynamic> route) => route.isFirst);
           }
@@ -206,6 +217,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  // Cards for the My Reviews tab.
   List<Widget> _buildReviewList() {
     if (_myReviews.isEmpty) {
       return const <Widget>[_EmptyText('You have not written any reviews yet.')];
@@ -227,6 +239,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ];
   }
 
+  // Cards for the My Counters tab.
   List<Widget> _buildCounterList() {
     if (_myCounters.isEmpty) {
       return const <Widget>[
@@ -250,6 +263,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
+// Avatar, username and join date at the top.
 class _ProfileHeader extends StatelessWidget {
   const _ProfileHeader({required this.username, required this.joinDate});
 
@@ -284,6 +298,7 @@ class _ProfileHeader extends StatelessWidget {
   }
 }
 
+// One of the three number boxes (Reviews, Counters, Likes).
 class _StatBox extends StatelessWidget {
   const _StatBox({required this.value, required this.label});
 
@@ -307,6 +322,7 @@ class _StatBox extends StatelessWidget {
   }
 }
 
+// Card used in both tabs. Rating and counter count only show for reviews.
 class _ProfileItemCard extends StatelessWidget {
   const _ProfileItemCard({
     required this.title,
@@ -369,7 +385,7 @@ class _ProfileItemCard extends StatelessWidget {
                   const SizedBox(width: AppSpacing.xs),
                   Text('$counterCount counter reviews', style: AppText.caption),
                 ],
-                const Spacer(),
+                const Spacer(), // pushes Delete to the right
                 PillButton(
                   icon: Icons.delete_outline,
                   label: 'Delete',
@@ -385,6 +401,7 @@ class _ProfileItemCard extends StatelessWidget {
   }
 }
 
+// Message shown when a tab has nothing in it.
 class _EmptyText extends StatelessWidget {
   const _EmptyText(this.text);
 
