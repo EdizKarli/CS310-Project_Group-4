@@ -5,6 +5,7 @@ import '../widgets/auth_components.dart';
 import 'home_screen.dart';
 import 'login_screen.dart';
 
+// Lets new users create an account.
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({
     super.key,
@@ -12,6 +13,7 @@ class SignUpScreen extends StatefulWidget {
     this.onSignUpSuccess,
   });
 
+  // Optional. If given, these run instead of the normal navigation.
   final VoidCallback? onLoginTap;
   final VoidCallback? onSignUpSuccess;
 
@@ -25,9 +27,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  // Password stays hidden until the eye icon is tapped.
   bool _obscurePassword = true;
 
   @override
+  // Clean up the text controllers when the screen closes.
   void dispose() {
     _handleController.dispose();
     _emailController.dispose();
@@ -35,6 +39,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     super.dispose();
   }
 
+  // Switches over to the Login screen.
   void _handleLoginTap() {
     if (widget.onLoginTap != null) {
       widget.onLoginTap!();
@@ -51,6 +56,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
+  // Checks the form first, then opens Home if everything looks fine.
   void _submitSignUp() {
     FocusScope.of(context).unfocus();
     if (!(_formKey.currentState?.validate() ?? false)) {
@@ -71,6 +77,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       title: 'Create a CineDeb Account',
       subtitle: 'Join the best film debate community',
       children: <Widget>[
+        // Log In / Sign Up switch at the top.
         AuthModeSwitch(
           selectedMode: AuthMode.signUp,
           onModeSelected: (AuthMode mode) {
@@ -120,6 +127,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             if (trimmed.isEmpty) {
               return 'Please enter your email address';
             }
+            // Very simple check, just looks for an @ and a dot.
             if (!trimmed.contains('@') || !trimmed.contains('.')) {
               return 'Please enter a valid email address';
             }
