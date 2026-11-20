@@ -146,3 +146,15 @@ flutter analyze   # check the code for problems
 | The first launch shows the Flutter logo for a while | This is normal for a debug build. The first start can take 10–20 seconds. |
 | `flutter run` says no device is connected | Start the emulator first and check that it appears in `flutter devices`. |
 | Packages are missing or out of date | Run `flutter clean` and then `flutter pub get`. |
+
+## Project Structure
+
+```
+lib/
+├── main.dart     # App entry point – applies the theme and opens the Login screen
+├── models/       # Data classes (Movie, Review, CounterReview) and placeholder data
+├── screens/      # One file per screen, e.g. home_screen.dart
+├── utils/        # Shared design files: app_colors.dart, app_styles.dart, app_theme.dart
+└── widgets/      # Reusable widgets: movie cards, review buttons, chips, bottom navigation
+test/             # Widget tests
+```
