@@ -19,6 +19,11 @@ class AppText {
       fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.white);
   static const TextStyle caption = TextStyle(
       fontSize: 12, color: AppColors.textSecondary);
+  static const TextStyle overline = TextStyle(
+      fontSize: 11,
+      fontWeight: FontWeight.w600,
+      letterSpacing: 1.2,
+      color: AppColors.textSecondary);
 }
 
 class AppSpacing {

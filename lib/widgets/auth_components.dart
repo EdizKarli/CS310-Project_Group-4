@@ -60,7 +60,7 @@ class AuthScreenShell extends StatelessWidget {
                         children: <Widget>[
                           const Align(
                             alignment: Alignment.centerLeft,
-                            child: _BrandBadge(),
+                            child: BrandBadge(),
                           ),
                           const SizedBox(height: AppSpacing.m),
                           const _AuthHeroBanner(),
@@ -162,8 +162,9 @@ class AuthFieldHeader extends StatelessWidget {
   }
 }
 
-class _BrandBadge extends StatelessWidget {
-  const _BrandBadge();
+/// "CINEDEB" brand label, shared by the auth screens and the Home screen.
+class BrandBadge extends StatelessWidget {
+  const BrandBadge({super.key});
 
   @override
   Widget build(BuildContext context) {

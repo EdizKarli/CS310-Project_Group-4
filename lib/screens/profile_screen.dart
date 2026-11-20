@@ -8,7 +8,10 @@ import '../widgets/review_widgets.dart';
 import 'login_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  const ProfileScreen({super.key, this.initialTab = 0});
+
+  /// Tab shown first: 0 = My Reviews, 1 = My Counters.
+  final int initialTab;
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -37,7 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final String _username = 'cinedeb_user';
   final DateTime _joinDate = DateTime(2026, 9, 1);
 
-  int _tab = 0;
+  late int _tab = widget.initialTab;
 
   final List<_MyReview> _myReviews = <_MyReview>[
     _MyReview(
@@ -190,7 +193,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       bottomNavigationBar: NavigationBar(
         selectedIndex: 1,
         onDestinationSelected: (int index) {
-          if (index == 0) Navigator.maybePop(context);
+          if (index == 0) {
+            Navigator.popUntil(context, (Route<dynamic> route) => route.isFirst);
+          }
         },
         destinations: const <Widget>[
           NavigationDestination(icon: Icon(Icons.home_outlined), label: 'Home'),

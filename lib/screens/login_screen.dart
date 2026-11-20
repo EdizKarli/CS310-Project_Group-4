@@ -4,7 +4,7 @@ import '../utils/app_colors.dart';
 import '../utils/app_styles.dart';
 import '../widgets/auth_components.dart';
 import 'forgot_password_screen.dart';
-import 'reviews_screen.dart';
+import 'home_screen.dart';
 import 'sign_up_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -53,12 +53,11 @@ class _LoginScreenState extends State<LoginScreen> {
     Navigator.of(context).push(authFadeRoute(const ForgotPasswordScreen()));
   }
 
-  void _openAvailableHome() {
-    // TODO: navigate to Home/Discover screen once it is built.
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => const ReviewsScreen(movieTitle: 'Inception'),
-      ),
+  void _openHome() {
+    // Home becomes the first route, so Back does not return to Login.
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute<void>(builder: (_) => const HomeScreen()),
+      (Route<dynamic> route) => false,
     );
   }
 
@@ -72,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
       widget.onLoginSuccess!();
       return;
     }
-    _openAvailableHome();
+    _openHome();
   }
 
   @override
