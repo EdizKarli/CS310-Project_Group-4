@@ -158,3 +158,13 @@ lib/
 └── widgets/      # Reusable widgets: movie cards, review buttons, chips, bottom navigation
 test/             # Widget tests
 ```
+
+### Design rules
+
+- **Shared styles only:** colors come from `AppColors`, text styles from `AppText`, and spacing and corner radius from `AppSpacing` and `AppRadius`, so every screen looks the same.
+- **Dark theme with a red accent**, defined once in `AppTheme.dark`.
+- **Reusable widgets** live in `lib/widgets/` instead of copying UI code between screens.
+
+### How we work
+
+Each screen or feature is built on its own branch and merged into `main` through a pull request that a teammate reviews.
