@@ -59,3 +59,27 @@ Film enthusiasts and casual moviegoers who want to read balanced viewpoints inst
 - **Counter-reviews** – challenge any review with a counter-review, one level deep.
 - **Write a review** – rate a movie from 1 to 10 and write a review of 20–500 characters.
 - **Profile** – see your stats, your reviews and your counter-reviews, and delete them.
+
+## Screens
+
+| # | Screen | What it does |
+|---|--------|--------------|
+| 1 | Login | Log in with an email or @handle and a password. Links to Sign Up and Forgot Password. |
+| 2 | Sign Up | Create an account with a handle, an email and a password. |
+| 3 | Forgot Password | Ask for a password reset link by email. |
+| 4 | Home / Discover | The main hub: search bar, quick-access tiles, Trending Now, Hot Debates and All Movies. |
+| 5 | Search Results | Movies that match a search, with Year, Rating and Genre filters and a sort option. |
+| 6 | Movie Detail | Poster, year, genres, average rating, summary and the top reviews of one movie. |
+| 7 | Reviews | All reviews of a movie, with Like, Dislike, Counter Reviews and Challenge buttons. |
+| 8 | Counter Reviews | The original review at the top and all of its counter-reviews below it. |
+| 9 | Write Review | A form with a 1–10 rating and the review text, inline errors and a confirmation dialog. |
+| 10 | Profile | Your stats, your reviews and counter-reviews (with Delete), and Log Out. |
+
+### Navigation flow
+
+1. The app opens on **Login**. New users go to **Sign Up**.
+2. After logging in or signing up, the user lands on **Home**.
+3. From Home, the user searches for a movie (→ **Search Results**) or taps a movie (→ **Movie Detail**).
+4. On Movie Detail, the user reads the top reviews or taps **Write a Review**.
+5. Any review can be challenged from **Reviews** or **Counter Reviews**.
+6. The bottom bar switches between **Home** and **Profile**. **Log Out** on Profile goes back to Login.
