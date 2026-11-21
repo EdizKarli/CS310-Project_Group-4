@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 
+import '../models/counter_review.dart';
 import '../models/movie.dart';
+import '../models/review.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_styles.dart';
 import '../widgets/app_bottom_nav.dart';
 import '../widgets/common_widgets.dart';
 import '../widgets/movie_widgets.dart';
+import '../widgets/review_widgets.dart';
+import 'counter_reviews_screen.dart';
+import 'reviews_screen.dart';
 
-/// Shows one movie: poster, release year, genres, average rating and summary.
+/// Shows one movie: poster, release year, genres, average rating, summary
+/// and its top reviews. Opened from the Home and Search Results screens.
 class MovieDetailScreen extends StatefulWidget {
   const MovieDetailScreen({super.key, required this.movie});
 
@@ -18,10 +24,57 @@ class MovieDetailScreen extends StatefulWidget {
 }
 
 class _MovieDetailScreenState extends State<MovieDetailScreen> {
+  /// How many reviews are shown here before "See all".
+  static const int _topReviewCount = 3;
+
+  /// Placeholder data until reviews are loaded from Firebase in Step 3.
+  late final List<Review> _reviews = _sampleReviews(widget.movie);
+
+  int get _reviewCount => widget.movie.reviewCount;
+
+  /// The most liked reviews first.
+  List<Review> get _topReviews {
+    final List<Review> list = List<Review>.of(_reviews)
+      ..sort((Review a, Review b) => b.likes.compareTo(a.likes));
+    return list.take(_topReviewCount).toList();
+  }
+
   void _showMessage(String text) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text(text)));
+  }
+
+  void _toggleLike(Review r) {
+    setState(() {
+      if (r.isLiked) {
+        r.isLiked = false;
+        r.likes--;
+      } else {
+        r.isLiked = true;
+        r.likes++;
+        if (r.isDisliked) {
+          r.isDisliked = false;
+          r.dislikes--;
+        }
+      }
+    });
+  }
+
+  void _toggleDislike(Review r) {
+    setState(() {
+      if (r.isDisliked) {
+        r.isDisliked = false;
+        r.dislikes--;
+      } else {
+        r.isDisliked = true;
+        r.dislikes++;
+        if (r.isLiked) {
+          r.isLiked = false;
+          r.likes--;
+        }
+      }
+    });
   }
 
   void _openWriteReview() {
@@ -29,9 +82,33 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     _showMessage('Write Review will open here');
   }
 
+  Future<void> _openAllReviews() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (_) => ReviewsScreen(movieTitle: widget.movie.title),
+      ),
+    );
+    if (!mounted) return;
+    setState(() {});
+  }
+
+  Future<void> _openCounterReviews(Review review) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (_) => CounterReviewsScreen(review: review),
+      ),
+    );
+    // Counter reviews may have been added, so refresh the counts.
+    if (!mounted) return;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final Movie movie = widget.movie;
+    final List<Review> topReviews = _topReviews;
 
     return Scaffold(
       appBar: AppBar(
@@ -56,7 +133,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.m),
         children: <Widget>[
-          _MovieHeader(movie: movie, reviewCount: movie.reviewCount),
+          _MovieHeader(movie: movie, reviewCount: _reviewCount),
           const SizedBox(height: AppSpacing.l),
 
           // Summary
@@ -73,6 +150,36 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
             icon: const Icon(Icons.rate_review_outlined),
             label: const Text('Write a Review'),
           ),
+          const SizedBox(height: AppSpacing.l),
+
+          // Top Reviews
+          SectionHeader(
+            title: 'Top Reviews',
+            action: SeeAllButton(
+              label: 'See all ($_reviewCount)',
+              onPressed: _openAllReviews,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.s),
+          if (topReviews.isEmpty)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: AppSpacing.l),
+              child: Text(
+                'No reviews yet. Be the first to write one!',
+                style: AppText.bodySecondary,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          for (final Review review in topReviews)
+            Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.m),
+              child: _TopReviewCard(
+                review: review,
+                onLike: () => _toggleLike(review),
+                onDislike: () => _toggleDislike(review),
+                onCounterReviews: () => _openCounterReviews(review),
+              ),
+            ),
         ],
       ),
       bottomNavigationBar: const AppBottomNav(),
@@ -159,4 +266,108 @@ class _GenreTag extends StatelessWidget {
       child: Text(label, style: AppText.caption.copyWith(color: AppColors.white)),
     );
   }
+}
+
+/// Short review card: author, rating, the first lines of the text and the
+/// like / dislike / counter review buttons.
+class _TopReviewCard extends StatelessWidget {
+  const _TopReviewCard({
+    required this.review,
+    required this.onLike,
+    required this.onDislike,
+    required this.onCounterReviews,
+  });
+
+  final Review review;
+  final VoidCallback onLike;
+  final VoidCallback onDislike;
+  final VoidCallback onCounterReviews;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.m),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            AuthorRow(
+              username: review.username,
+              date: review.date,
+              trailing: RatingBadge(rating: review.rating),
+            ),
+            const SizedBox(height: AppSpacing.s),
+            Text(
+              review.text,
+              style: AppText.body,
+              maxLines: 4,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: AppSpacing.m),
+            Wrap(
+              spacing: AppSpacing.s,
+              runSpacing: AppSpacing.s,
+              children: <Widget>[
+                PillButton(
+                  icon: Icons.thumb_up_alt_outlined,
+                  label: 'Like ${review.likes}',
+                  selected: review.isLiked,
+                  onTap: onLike,
+                ),
+                PillButton(
+                  icon: Icons.thumb_down_alt_outlined,
+                  label: 'Dislike ${review.dislikes}',
+                  selected: review.isDisliked,
+                  onTap: onDislike,
+                ),
+                PillButton(
+                  icon: Icons.forum_outlined,
+                  label: '${review.counterCount} Counter Reviews',
+                  onTap: onCounterReviews,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Three example reviews for [movie] (the ids stay unique per movie).
+List<Review> _sampleReviews(Movie movie) {
+  return <Review>[
+    Review(
+      id: movie.id * 100 + 1,
+      username: 'username01',
+      date: DateTime(2026, 11, 12),
+      rating: 8,
+      text: 'The story is strong and the ending stays with you for days '
+          'after watching it. ${movie.title} rewards you for paying '
+          'attention to the small details in the first half.',
+      likes: 12,
+      dislikes: 3,
+      counterReviews: sampleCounterReviews(5),
+    ),
+    Review(
+      id: movie.id * 100 + 2,
+      username: 'username02',
+      date: DateTime(2026, 11, 10),
+      rating: 4,
+      text: 'Looks great but the plot is too confusing for me.',
+      likes: 8,
+      dislikes: 6,
+      counterReviews: sampleCounterReviews(2),
+    ),
+    Review(
+      id: movie.id * 100 + 3,
+      username: 'username03',
+      date: DateTime(2026, 11, 13),
+      rating: 7,
+      text: 'Good acting and music. The middle part is a bit slow, but it '
+          'is still worth watching on a big screen if you can.',
+      likes: 4,
+      dislikes: 1,
+    ),
+  ];
 }
