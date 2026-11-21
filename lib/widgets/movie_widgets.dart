@@ -4,15 +4,38 @@ import '../models/movie.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_styles.dart';
 
-/// Poster placeholder box used until real poster images are added.
+/// Movie poster. Shows a placeholder box when there is no image.
 class MoviePoster extends StatelessWidget {
-  const MoviePoster({super.key, this.width = 56, this.height = 84});
+  const MoviePoster({
+    super.key,
+    this.imageUrl,
+    this.width = 56,
+    this.height = 84,
+  });
 
+  final String? imageUrl;
   final double width;
   final double height;
 
   @override
   Widget build(BuildContext context) {
+    if (imageUrl == null) return _placeholder();
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(AppRadius.s),
+      child: Image.network(
+        imageUrl!,
+        width: width,
+        height: height,
+        fit: BoxFit.cover,
+        loadingBuilder: (_, Widget child, ImageChunkEvent? progress) =>
+            progress == null ? child : _placeholder(),
+        errorBuilder: (_, _, _) => _placeholder(),
+      ),
+    );
+  }
+
+  Widget _placeholder() {
     return Container(
       width: width,
       height: height,
@@ -78,7 +101,7 @@ class MovieListCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const MoviePoster(),
+              MoviePoster(imageUrl: movie.posterUrl),
               const SizedBox(width: AppSpacing.m),
               Expanded(
                 child: Column(
@@ -141,7 +164,11 @@ class TrendingMovieTile extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            MoviePoster(width: width, height: width * 1.5),
+            MoviePoster(
+              imageUrl: movie.posterUrl,
+              width: width,
+              height: width * 1.5,
+            ),
             const SizedBox(height: AppSpacing.s),
             Text(
               movie.title,

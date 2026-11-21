@@ -203,22 +203,15 @@ class _AuthHeroBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 112,
+      height: 180,
+      padding: const EdgeInsets.all(AppSpacing.m),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadius.l),
       ),
-      child: Center(
-        child: Container(
-          padding: const EdgeInsets.all(AppSpacing.m),
-          decoration: const BoxDecoration(
-            color: AppColors.redSoft,
-            shape: BoxShape.circle,
-          ),
-          child: const Text(
-            'LOGO HERE',
-          ),
-        ),
+      child: Image.asset(
+        'assets/images/cinedeb_logo.png',
+        fit: BoxFit.contain,
       ),
     );
   }

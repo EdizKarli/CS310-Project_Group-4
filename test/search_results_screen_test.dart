@@ -49,13 +49,13 @@ void main() {
     ) async {
       setScreenSize(tester, const Size(412, 915));
       await tester.pumpWidget(
-        buildTestApp(const SearchResultsScreen(initialQuery: 'dark')),
+        buildTestApp(const SearchResultsScreen(initialQuery: 'parasite')),
       );
 
       expect(find.text('FILTERS'), findsOneWidget);
-      expect(find.text('1 RESULT FOR "DARK"'), findsOneWidget);
+      expect(find.text('1 RESULT FOR "PARASITE"'), findsOneWidget);
       expect(find.byType(MovieListCard), findsOneWidget);
-      expect(firstResultTitle(tester), 'The Dark Knight');
+      expect(firstResultTitle(tester), 'Parasite');
       expect(find.text('END OF RESULTS'), findsOneWidget);
     });
 
@@ -64,16 +64,16 @@ void main() {
     ) async {
       setScreenSize(tester, const Size(412, 915));
       await tester.pumpWidget(buildTestApp(const SearchResultsScreen()));
-      expect(find.text('10 MOVIES'), findsOneWidget);
+      expect(find.text('3 MOVIES'), findsOneWidget);
 
-      await tester.enterText(find.byType(TextField), 'inter');
+      await tester.enterText(find.byType(TextField), 'whip');
       await tester.pump();
-      expect(find.text('1 RESULT FOR "INTER"'), findsOneWidget);
-      expect(firstResultTitle(tester), 'Interstellar');
+      expect(find.text('1 RESULT FOR "WHIP"'), findsOneWidget);
+      expect(firstResultTitle(tester), 'Whiplash');
 
       await tester.tap(find.byTooltip('Clear search'));
       await tester.pump();
-      expect(find.text('10 MOVIES'), findsOneWidget);
+      expect(find.text('3 MOVIES'), findsOneWidget);
       expect(find.byTooltip('Clear search'), findsNothing);
     });
 
@@ -85,16 +85,16 @@ void main() {
 
       await tester.enterText(find.byType(TextField), '2014');
       await tester.pump();
-      expect(find.text('2 RESULTS FOR "2014"'), findsOneWidget);
+      expect(find.text('1 RESULT FOR "2014"'), findsOneWidget);
 
       // A number up to 10 means "rated at least this".
       await tester.enterText(find.byType(TextField), '8.5');
       await tester.pump();
-      expect(find.text('4 RESULTS FOR "8.5"'), findsOneWidget);
+      expect(find.text('2 RESULTS FOR "8.5"'), findsOneWidget);
 
       await tester.enterText(find.byType(TextField), 'drama');
       await tester.pump();
-      expect(find.text('5 RESULTS FOR "DRAMA"'), findsOneWidget);
+      expect(find.text('2 RESULTS FOR "DRAMA"'), findsOneWidget);
     });
 
     testWidgets('shows an empty state when nothing matches', (
@@ -120,19 +120,19 @@ void main() {
       await tester.pumpWidget(buildTestApp(const SearchResultsScreen()));
       expect(find.text('Clear filters'), findsNothing);
 
-      await pickOption(tester, 'Rating: Any', '8+');
-      expect(find.text('Rating: 8+'), findsOneWidget);
-      expect(find.text('8 MOVIES'), findsOneWidget);
+      await pickOption(tester, 'Rating: Any', '8.5+');
+      expect(find.text('Rating: 8.5+'), findsOneWidget);
+      expect(find.text('2 MOVIES'), findsOneWidget);
 
-      await pickOption(tester, 'Genre: Any', 'Drama');
-      expect(find.text('Genre: Drama'), findsOneWidget);
-      expect(find.text('5 MOVIES'), findsOneWidget);
+      await pickOption(tester, 'Genre: Any', 'Music');
+      expect(find.text('Genre: Music'), findsOneWidget);
+      expect(find.text('1 MOVIE'), findsOneWidget);
 
       await tester.tap(find.text('Clear filters'));
       await tester.pumpAndSettle();
       expect(find.text('Rating: Any'), findsOneWidget);
       expect(find.text('Genre: Any'), findsOneWidget);
-      expect(find.text('10 MOVIES'), findsOneWidget);
+      expect(find.text('3 MOVIES'), findsOneWidget);
     });
 
     testWidgets('year filter keeps only movies from that period', (
@@ -143,8 +143,8 @@ void main() {
 
       await pickOption(tester, 'Year: Any', 'Before 2000');
       expect(find.text('Year: Before 2000'), findsOneWidget);
-      expect(find.text('1 MOVIE'), findsOneWidget);
-      expect(firstResultTitle(tester), 'Pulp Fiction');
+      expect(find.text('0 MOVIES'), findsOneWidget);
+      expect(find.byType(MovieListCard), findsNothing);
     });
 
     testWidgets('sort option changes the order of the results', (
@@ -154,11 +154,11 @@ void main() {
       await tester.pumpWidget(
         buildTestApp(const SearchResultsScreen(initialSort: MovieSort.title)),
       );
-      expect(firstResultTitle(tester), 'Dune: Part Two');
+      expect(firstResultTitle(tester), 'Inception');
 
       await pickOption(tester, 'Sort: Title A–Z', 'Highest rating');
       expect(find.text('Sort: Highest rating'), findsOneWidget);
-      expect(firstResultTitle(tester), 'The Dark Knight');
+      expect(firstResultTitle(tester), 'Parasite');
     });
   });
 
@@ -173,7 +173,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byType(SearchResultsScreen), findsOneWidget);
       expect(find.text('Sort: Highest rating'), findsOneWidget);
-      expect(firstResultTitle(tester), 'The Dark Knight');
+      expect(firstResultTitle(tester), 'Parasite');
 
       await tester.tap(find.byTooltip('Back'));
       await tester.pumpAndSettle();

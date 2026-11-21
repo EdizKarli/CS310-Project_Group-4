@@ -55,15 +55,15 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     ),
     _HotDebate(
-      movieTitle: 'Oppenheimer',
+      movieTitle: 'Parasite',
       review: Review(
         id: 2,
         username: 'filmbuff',
         date: DateTime(2026, 11, 16),
         rating: 6,
-        text: 'Brilliant acting, but three hours of mostly dialogue is a lot. '
-            'The second half drags and the film could lose thirty minutes '
-            'without missing anything important.',
+        text: 'The first half is brilliant and funny, but the ending turns '
+            'violent too suddenly. It felt like a different movie and I did '
+            'not enjoy the last twenty minutes as much.',
         likes: 18,
         dislikes: 9,
         counterReviews: sampleCounterReviews(3),

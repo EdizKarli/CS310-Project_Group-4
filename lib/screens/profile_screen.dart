@@ -63,13 +63,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     ),
     _MyReview(
-      movieTitle: 'Interstellar',
+      movieTitle: 'Whiplash',
       review: Review(
         id: 102,
         username: 'cinedeb_user',
         date: DateTime(2026, 10, 30),
         rating: 7,
-        text: 'Beautiful visuals, but the last part was too long for me.',
+        text: 'Amazing drumming scenes, but the teacher was too harsh for me.',
         likes: 9,
         dislikes: 4,
         counterReviews: sampleCounterReviews(1),

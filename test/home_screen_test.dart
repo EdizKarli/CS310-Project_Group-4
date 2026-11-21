@@ -65,17 +65,17 @@ void main() {
 
     await scrollTo(tester, find.text('Sort: Popular'));
     // Most reviewed movie comes first by default.
-    expect(firstMovieCardTitle(tester), 'The Dark Knight');
+    expect(firstMovieCardTitle(tester), 'Inception');
 
     await tester.tap(find.text('Sort: Popular'));
     await tester.pumpAndSettle();
     expect(find.text('Sort movies'), findsOneWidget);
 
-    await tester.tap(find.text('Title A–Z'));
+    await tester.tap(find.text('Highest rating'));
     await tester.pumpAndSettle();
     expect(find.text('Sort movies'), findsNothing);
-    expect(find.text('Sort: Title A–Z'), findsOneWidget);
-    expect(firstMovieCardTitle(tester), 'Dune: Part Two');
+    expect(find.text('Sort: Highest rating'), findsOneWidget);
+    expect(firstMovieCardTitle(tester), 'Parasite');
   });
 
   testWidgets('My counters opens Profile on the counters tab', (
