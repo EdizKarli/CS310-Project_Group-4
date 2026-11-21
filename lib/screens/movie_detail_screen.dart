@@ -11,6 +11,7 @@ import '../widgets/movie_widgets.dart';
 import '../widgets/review_widgets.dart';
 import 'counter_reviews_screen.dart';
 import 'reviews_screen.dart';
+import 'write_review_screen.dart';
 
 /// Shows one movie: poster, release year, genres, average rating, summary
 /// and its top reviews. Opened from the Home and Search Results screens.
@@ -30,19 +31,26 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   /// Placeholder data until reviews are loaded from Firebase in Step 3.
   late final List<Review> _reviews = _sampleReviews(widget.movie);
 
-  int get _reviewCount => widget.movie.reviewCount;
+  bool _isOwn(Review review) => review.username == WriteReviewScreen.currentUser;
 
-  /// The most liked reviews first.
+  /// Total shown in the header: the movie's count plus reviews written here.
+  int get _reviewCount =>
+      widget.movie.reviewCount + _reviews.where(_isOwn).length;
+
+  /// The user's own reviews first, then the most liked ones.
   List<Review> get _topReviews {
     final List<Review> list = List<Review>.of(_reviews)
-      ..sort((Review a, Review b) => b.likes.compareTo(a.likes));
+      ..sort((Review a, Review b) {
+        if (_isOwn(a) != _isOwn(b)) return _isOwn(a) ? -1 : 1;
+        return b.likes.compareTo(a.likes);
+      });
     return list.take(_topReviewCount).toList();
   }
 
-  void _showMessage(String text) {
+  void _showMessage(String text, {SnackBarAction? action}) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(text)));
+      ..showSnackBar(SnackBar(content: Text(text), action: action));
   }
 
   void _toggleLike(Review r) {
@@ -77,9 +85,32 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     });
   }
 
-  void _openWriteReview() {
-    // TODO: open the Write Review screen once it is built.
-    _showMessage('Write Review will open here');
+  // Removes the card right away; "Undo" puts it back in the same place.
+  void _deleteReview(Review review) {
+    final int index = _reviews.indexOf(review);
+    setState(() => _reviews.remove(review));
+    _showMessage(
+      'Review deleted',
+      action: SnackBarAction(
+        label: 'Undo',
+        onPressed: () {
+          if (!mounted) return;
+          setState(() => _reviews.insert(index, review));
+        },
+      ),
+    );
+  }
+
+  // Waits for the new review from the Write Review screen and adds it on top.
+  Future<void> _openWriteReview() async {
+    final Review? review = await Navigator.push<Review>(
+      context,
+      MaterialPageRoute<Review>(
+        builder: (_) => WriteReviewScreen(movie: widget.movie),
+      ),
+    );
+    if (review == null || !mounted) return;
+    setState(() => _reviews.insert(0, review));
   }
 
   Future<void> _openAllReviews() async {
@@ -175,9 +206,11 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
               padding: const EdgeInsets.only(bottom: AppSpacing.m),
               child: _TopReviewCard(
                 review: review,
+                isOwn: _isOwn(review),
                 onLike: () => _toggleLike(review),
                 onDislike: () => _toggleDislike(review),
                 onCounterReviews: () => _openCounterReviews(review),
+                onDelete: () => _deleteReview(review),
               ),
             ),
         ],
@@ -269,19 +302,23 @@ class _GenreTag extends StatelessWidget {
 }
 
 /// Short review card: author, rating, the first lines of the text and the
-/// like / dislike / counter review buttons.
+/// like / dislike / counter review buttons. Own reviews also get "Delete".
 class _TopReviewCard extends StatelessWidget {
   const _TopReviewCard({
     required this.review,
+    required this.isOwn,
     required this.onLike,
     required this.onDislike,
     required this.onCounterReviews,
+    required this.onDelete,
   });
 
   final Review review;
+  final bool isOwn;
   final VoidCallback onLike;
   final VoidCallback onDislike;
   final VoidCallback onCounterReviews;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -325,6 +362,13 @@ class _TopReviewCard extends StatelessWidget {
                   label: '${review.counterCount} Counter Reviews',
                   onTap: onCounterReviews,
                 ),
+                if (isOwn)
+                  PillButton(
+                    icon: Icons.delete_outline,
+                    label: 'Delete',
+                    outlined: true,
+                    onTap: onDelete,
+                  ),
               ],
             ),
           ],
