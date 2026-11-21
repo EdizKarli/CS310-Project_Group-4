@@ -9,7 +9,9 @@ import '../widgets/auth_components.dart';
 import '../widgets/movie_widgets.dart';
 
 /// Form for posting a new review: a rating from 1 to 10 and the review text.
-/// The screen closes with the new [Review] when it is posted.
+///
+/// Both fields show their errors under them. After a valid submission the
+/// screen closes with the new [Review].
 class WriteReviewScreen extends StatefulWidget {
   const WriteReviewScreen({super.key, required this.movie});
 
@@ -26,9 +28,13 @@ class WriteReviewScreen extends StatefulWidget {
 }
 
 class _WriteReviewScreenState extends State<WriteReviewScreen> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _textController = TextEditingController();
 
   int? _rating;
+
+  /// Errors are only shown after the first tap on "Post Review".
+  bool _triedToSubmit = false;
 
   @override
   void dispose() {
@@ -36,29 +42,32 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
     super.dispose();
   }
 
+  String? _validateRating(int? value) {
+    if (value == null) return 'Please select a rating from 1 to 10.';
+    return null;
+  }
+
+  String? _validateText(String? value) {
+    final String text = value?.trim() ?? '';
+    if (text.isEmpty) return 'Please write your review.';
+    if (text.length < WriteReviewScreen.minLength) {
+      return 'Review must be at least ${WriteReviewScreen.minLength} '
+          'characters (${text.length}/${WriteReviewScreen.minLength}).';
+    }
+    return null;
+  }
+
   void _submit() {
     FocusScope.of(context).unfocus();
-    final String text = _textController.text.trim();
-    if (_rating == null || text.length < WriteReviewScreen.minLength) {
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(
-          const SnackBar(
-            content: Text(
-              'Pick a rating and write at least '
-              '${WriteReviewScreen.minLength} characters.',
-            ),
-          ),
-        );
-      return;
-    }
+    setState(() => _triedToSubmit = true);
+    if (!_formKey.currentState!.validate()) return;
 
     final Review review = Review(
       id: DateTime.now().millisecondsSinceEpoch,
       username: WriteReviewScreen.currentUser,
       date: DateTime.now(),
       rating: _rating!,
-      text: text,
+      text: _textController.text.trim(),
     );
 
     Navigator.pop(context, review);
@@ -92,74 +101,103 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
           ],
         ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(AppSpacing.m),
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        children: <Widget>[
-          _MovieSummaryRow(movie: movie),
-          const SizedBox(height: AppSpacing.m),
-          const Divider(height: 1),
-          const SizedBox(height: AppSpacing.l),
+      body: Form(
+        key: _formKey,
+        autovalidateMode: _triedToSubmit
+            ? AutovalidateMode.always
+            : AutovalidateMode.disabled,
+        child: ListView(
+          padding: const EdgeInsets.all(AppSpacing.m),
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          children: <Widget>[
+            _MovieSummaryRow(movie: movie),
+            const SizedBox(height: AppSpacing.m),
+            const Divider(height: 1),
+            const SizedBox(height: AppSpacing.l),
 
-          // Field 1: rating from 1 to 10
-          const AuthFieldHeader(
-            label: 'Your Rating*',
-            trailing: Text('*REQUIRED', style: AppText.overline),
-          ),
-          const SizedBox(height: AppSpacing.s),
-          _RatingSelector(
-            selected: _rating,
-            onSelected: (int value) => setState(() => _rating = value),
-          ),
-          const SizedBox(height: AppSpacing.s),
-          Text(
-            _rating == null
-                ? 'Tap a number to rate the movie.'
-                : 'Selected: $_rating/10 · ${_ratingLabel(_rating!)}',
-            style: AppText.caption,
-          ),
-          const SizedBox(height: AppSpacing.l),
-
-          // Field 2: review text
-          const AuthFieldHeader(
-            label: 'Your Review*',
-            trailing: Text('*REQUIRED', style: AppText.overline),
-          ),
-          const SizedBox(height: AppSpacing.s),
-          TextField(
-            controller: _textController,
-            minLines: 5,
-            maxLines: 8,
-            maxLength: WriteReviewScreen.maxLength,
-            keyboardType: TextInputType.multiline,
-            textCapitalization: TextCapitalization.sentences,
-            style: AppText.body,
-            decoration: const InputDecoration(
-              hintText: 'Share your thoughts about the movie...',
-              helperText:
-                  'At least ${WriteReviewScreen.minLength} characters.',
-              alignLabelWithHint: true,
+            // Field 1: rating from 1 to 10
+            const AuthFieldHeader(
+              label: 'Your Rating*',
+              trailing: Text('*REQUIRED', style: AppText.overline),
             ),
-          ),
-          const SizedBox(height: AppSpacing.l),
-
-          ElevatedButton(
-            onPressed: _submit,
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text('Post Review'),
-                SizedBox(width: AppSpacing.s),
-                Icon(Icons.arrow_forward_rounded, size: 18),
-              ],
+            const SizedBox(height: AppSpacing.s),
+            FormField<int>(
+              validator: _validateRating,
+              builder: (FormFieldState<int> field) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    _RatingSelector(
+                      selected: field.value,
+                      hasError: field.hasError,
+                      onSelected: (int value) {
+                        field.didChange(value);
+                        setState(() => _rating = value);
+                      },
+                    ),
+                    const SizedBox(height: AppSpacing.s),
+                    if (field.hasError)
+                      Text(
+                        field.errorText!,
+                        style: AppText.caption.copyWith(color: AppColors.error),
+                      )
+                    else
+                      Text(
+                        field.value == null
+                            ? 'Tap a number to rate the movie.'
+                            : 'Selected: ${field.value}/10 · '
+                                '${_ratingLabel(field.value!)}',
+                        style: AppText.caption,
+                      ),
+                  ],
+                );
+              },
             ),
-          ),
-          const SizedBox(height: AppSpacing.s),
-          OutlinedButton(
-            onPressed: _cancel,
-            child: const Text('Cancel'),
-          ),
-        ],
+            const SizedBox(height: AppSpacing.l),
+
+            // Field 2: review text
+            const AuthFieldHeader(
+              label: 'Your Review*',
+              trailing: Text('*REQUIRED', style: AppText.overline),
+            ),
+            const SizedBox(height: AppSpacing.s),
+            TextFormField(
+              controller: _textController,
+              minLines: 5,
+              maxLines: 8,
+              maxLength: WriteReviewScreen.maxLength,
+              keyboardType: TextInputType.multiline,
+              textCapitalization: TextCapitalization.sentences,
+              style: AppText.body,
+              decoration: const InputDecoration(
+                hintText: 'Share your thoughts about the movie...',
+                helperText:
+                    'At least ${WriteReviewScreen.minLength} characters.',
+                alignLabelWithHint: true,
+              ),
+              onChanged: (_) => setState(() {}),
+              validator: _validateText,
+            ),
+            const SizedBox(height: AppSpacing.l),
+
+            ElevatedButton(
+              onPressed: _submit,
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('Post Review'),
+                  SizedBox(width: AppSpacing.s),
+                  Icon(Icons.arrow_forward_rounded, size: 18),
+                ],
+              ),
+            ),
+            const SizedBox(height: AppSpacing.s),
+            OutlinedButton(
+              onPressed: _cancel,
+              child: const Text('Cancel'),
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: const AppBottomNav(),
     );
@@ -215,9 +253,14 @@ class _MovieSummaryRow extends StatelessWidget {
 /// The ten rating boxes. They sit in one row when there is enough width
 /// and switch to two rows of five on small phones, so they never overflow.
 class _RatingSelector extends StatelessWidget {
-  const _RatingSelector({required this.selected, required this.onSelected});
+  const _RatingSelector({
+    required this.selected,
+    required this.hasError,
+    required this.onSelected,
+  });
 
   final int? selected;
+  final bool hasError;
   final ValueChanged<int> onSelected;
 
   static const double _gap = 6;
@@ -242,6 +285,7 @@ class _RatingSelector extends StatelessWidget {
                 value: value,
                 width: boxWidth,
                 selected: value == selected,
+                hasError: hasError,
                 onTap: () => onSelected(value),
               ),
           ],
@@ -256,18 +300,22 @@ class _RatingBox extends StatelessWidget {
     required this.value,
     required this.width,
     required this.selected,
+    required this.hasError,
     required this.onTap,
   });
 
   final int value;
   final double width;
   final bool selected;
+  final bool hasError;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final BorderRadius radius = BorderRadius.circular(AppRadius.s);
-    final Color borderColor = selected ? AppColors.red : AppColors.border;
+    Color borderColor = AppColors.border;
+    if (hasError) borderColor = AppColors.error;
+    if (selected) borderColor = AppColors.red;
 
     return Semantics(
       button: true,
