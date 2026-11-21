@@ -21,6 +21,7 @@ class AppTheme {
 
     return ThemeData(
       useMaterial3: true,
+      fontFamily: AppText.fontFamily,
       brightness: Brightness.dark,
       colorScheme: const ColorScheme.dark(
         primary: AppColors.red,
