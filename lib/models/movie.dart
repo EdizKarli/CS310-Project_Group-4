@@ -8,6 +8,7 @@ class Movie {
     required this.reviewCount,
     required this.debateCount,
     this.posterUrl,
+    this.summary = '',
   });
 
   final int id;
@@ -20,6 +21,9 @@ class Movie {
   final int reviewCount;
   final int debateCount;
   final String? posterUrl;
+
+  /// Short plot description shown on the Movie Detail screen.
+  final String summary;
 
   /// e.g. "Sci-Fi · Action"
   String get genreLabel => genres.join(' · ');
@@ -134,6 +138,11 @@ const List<Movie> sampleMovies = <Movie>[
     debateCount: 38,
     posterUrl:
         'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_FMjpg_UX1000_.jpg',
+    summary:
+        'A thief who steals secrets from people\'s dreams is offered one last '
+        'job: instead of stealing an idea, he has to plant one. The deeper '
+        'his team goes into dreams inside dreams, the harder it gets to tell '
+        'what is real.',
   ),
   Movie(
     id: 2,
@@ -145,6 +154,11 @@ const List<Movie> sampleMovies = <Movie>[
     debateCount: 30,
     posterUrl:
         'https://m.media-amazon.com/images/M/MV5BYjk1Y2U4MjQtY2ZiNS00OWQyLWI3MmYtZWUwNmRjYWRiNWNhXkEyXkFqcGc@._V1_.jpg',
+    summary:
+        'A poor family in Seoul gets hired one by one by a rich household by '
+        'pretending to be unrelated experts. Their plan works well until a '
+        'secret hidden inside the house turns the comedy into a tense '
+        'thriller.',
   ),
   Movie(
     id: 3,
@@ -156,5 +170,9 @@ const List<Movie> sampleMovies = <Movie>[
     debateCount: 12,
     posterUrl:
         'https://upload.wikimedia.org/wikipedia/tr/7/7e/Whiplash_%28film%2C_2014%29.jpg',
+    summary:
+        'A young jazz drummer joins the top band of a music school, led by a '
+        'very harsh teacher. Pushed to his limits, he has to decide how much '
+        'he is ready to give up to become great.',
   ),
 ];
