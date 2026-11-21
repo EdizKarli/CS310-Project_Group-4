@@ -11,6 +11,7 @@ import '../widgets/common_widgets.dart';
 import '../widgets/movie_widgets.dart';
 import '../widgets/review_widgets.dart';
 import 'counter_reviews_screen.dart';
+import 'movie_detail_screen.dart';
 import 'profile_screen.dart';
 import 'reviews_screen.dart';
 import 'search_results_screen.dart';
@@ -77,15 +78,11 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  void _showMessage(String text) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(text)));
-  }
-
   void _openMovie(Movie movie) {
-    // TODO: open the Movie Detail screen once it is built.
-    _showMessage('${movie.title} details will open here');
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(builder: (_) => MovieDetailScreen(movie: movie)),
+    );
   }
 
   void _openSearch({String query = '', MovieSort sort = MovieSort.popular}) {
