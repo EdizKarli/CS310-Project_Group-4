@@ -10,8 +10,9 @@ import '../widgets/movie_widgets.dart';
 
 /// Form for posting a new review: a rating from 1 to 10 and the review text.
 ///
-/// Both fields show their errors under them. After a valid submission the
-/// screen closes with the new [Review].
+/// Both fields show their errors under them. After a valid submission a
+/// confirmation dialog is shown, and the screen closes with the new [Review]
+/// so the Movie Detail screen can add it to the list.
 class WriteReviewScreen extends StatefulWidget {
   const WriteReviewScreen({super.key, required this.movie});
 
@@ -36,6 +37,9 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
   /// Errors are only shown after the first tap on "Post Review".
   bool _triedToSubmit = false;
 
+  bool get _hasChanges =>
+      _rating != null || _textController.text.trim().isNotEmpty;
+
   @override
   void dispose() {
     _textController.dispose();
@@ -57,7 +61,7 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
     return null;
   }
 
-  void _submit() {
+  Future<void> _submit() async {
     FocusScope.of(context).unfocus();
     setState(() => _triedToSubmit = true);
     if (!_formKey.currentState!.validate()) return;
@@ -70,10 +74,61 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
       text: _textController.text.trim(),
     );
 
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) => AlertDialog(
+        icon: const Icon(
+          Icons.check_circle_outline,
+          color: AppColors.red,
+          size: 40,
+        ),
+        title: const Text('Review Posted!'),
+        content: Text(
+          'Your ${review.rating}/10 review for ${widget.movie.title} '
+          'has been posted.',
+          textAlign: TextAlign.center,
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+
+    // Go back to Movie Detail with the new review.
+    if (!mounted) return;
     Navigator.pop(context, review);
   }
 
-  void _cancel() {
+  // Asks before throwing away a half-written review.
+  Future<void> _cancel() async {
+    if (!_hasChanges) {
+      Navigator.pop(context);
+      return;
+    }
+
+    final bool? discard = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext dialogContext) => AlertDialog(
+        title: const Text('Discard review?'),
+        content: const Text('Your rating and text will be lost.'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('Keep Writing'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: const Text('Discard'),
+          ),
+        ],
+      ),
+    );
+
+    if (discard != true || !mounted) return;
     Navigator.pop(context);
   }
 
@@ -86,7 +141,7 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           tooltip: 'Back',
-          onPressed: () => Navigator.maybePop(context),
+          onPressed: _cancel,
         ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
