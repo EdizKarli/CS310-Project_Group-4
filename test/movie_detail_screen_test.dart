@@ -1,6 +1,7 @@
 import 'package:cinedeb/models/movie.dart';
 import 'package:cinedeb/screens/movie_detail_screen.dart';
 import 'package:cinedeb/screens/reviews_screen.dart';
+import 'package:cinedeb/screens/write_review_screen.dart';
 import 'package:cinedeb/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -8,6 +9,8 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   // Inception: 2010, Sci-Fi · Action, 124 reviews.
   final Movie movie = sampleMovies.first;
+
+  const String newReview = 'A clever movie with great music and visuals.';
 
   Widget buildTestApp() {
     return MaterialApp(
@@ -28,6 +31,23 @@ void main() {
       200,
       scrollable: find.byType(Scrollable).first,
     );
+    await tester.pumpAndSettle();
+  }
+
+  // Opens Write Review, fills in a valid review and confirms the dialog.
+  Future<void> postReview(WidgetTester tester) async {
+    await tester.tap(find.text('Write a Review'));
+    await tester.pumpAndSettle();
+    expect(find.byType(WriteReviewScreen), findsOneWidget);
+
+    await tester.tap(find.text('9'));
+    await tester.enterText(find.byType(TextFormField), newReview);
+    await tester.ensureVisible(find.text('Post Review'));
+    await tester.tap(find.text('Post Review'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Review Posted!'), findsOneWidget);
+    await tester.tap(find.text('OK'));
     await tester.pumpAndSettle();
   }
 
@@ -91,6 +111,31 @@ void main() {
 
     expect(find.byType(ReviewsScreen), findsOneWidget);
     expect(find.text('Reviews'), findsOneWidget);
+  });
+
+  testWidgets('A posted review appears on top and can be deleted', (
+    WidgetTester tester,
+  ) async {
+    setScreenSize(tester, const Size(412, 915));
+    await tester.pumpWidget(buildTestApp());
+
+    await postReview(tester);
+    expect(find.byType(WriteReviewScreen), findsNothing);
+
+    await scrollTo(tester, find.text(newReview));
+    expect(find.text(newReview), findsOneWidget);
+    expect(find.text('See all (125)'), findsOneWidget);
+
+    await tester.ensureVisible(find.text('Delete'));
+    await tester.tap(find.text('Delete'));
+    await tester.pumpAndSettle();
+    expect(find.text(newReview), findsNothing);
+    expect(find.text('Review deleted'), findsOneWidget);
+
+    // Undo puts it back.
+    await tester.tap(find.text('Undo'));
+    await tester.pumpAndSettle();
+    expect(find.text(newReview), findsOneWidget);
   });
 
   // Small, medium and large phones in portrait mode.
