@@ -7,6 +7,7 @@ class Movie {
     required this.rating,
     required this.reviewCount,
     required this.debateCount,
+    this.posterUrl,
   });
 
   final int id;
@@ -18,6 +19,7 @@ class Movie {
   final double rating;
   final int reviewCount;
   final int debateCount;
+  final String? posterUrl;
 
   /// e.g. "Sci-Fi · Action"
   String get genreLabel => genres.join(' · ');
@@ -130,86 +132,29 @@ const List<Movie> sampleMovies = <Movie>[
     rating: 8.4,
     reviewCount: 124,
     debateCount: 38,
+    posterUrl:
+        'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_FMjpg_UX1000_.jpg',
   ),
   Movie(
     id: 2,
-    title: 'Interstellar',
-    year: 2014,
-    genres: <String>['Sci-Fi', 'Drama'],
-    rating: 8.1,
-    reviewCount: 96,
-    debateCount: 21,
-  ),
-  Movie(
-    id: 3,
     title: 'Parasite',
     year: 2019,
     genres: <String>['Thriller', 'Drama'],
     rating: 8.6,
     reviewCount: 88,
     debateCount: 30,
+    posterUrl:
+        'https://m.media-amazon.com/images/M/MV5BYjk1Y2U4MjQtY2ZiNS00OWQyLWI3MmYtZWUwNmRjYWRiNWNhXkEyXkFqcGc@._V1_.jpg',
   ),
   Movie(
-    id: 4,
-    title: 'The Dark Knight',
-    year: 2008,
-    genres: <String>['Action', 'Crime'],
-    rating: 8.9,
-    reviewCount: 151,
-    debateCount: 44,
-  ),
-  Movie(
-    id: 5,
-    title: 'Dune: Part Two',
-    year: 2024,
-    genres: <String>['Sci-Fi', 'Adventure'],
-    rating: 7.9,
-    reviewCount: 67,
-    debateCount: 26,
-  ),
-  Movie(
-    id: 6,
-    title: 'Oppenheimer',
-    year: 2023,
-    genres: <String>['Drama', 'History'],
-    rating: 8.2,
-    reviewCount: 102,
-    debateCount: 41,
-  ),
-  Movie(
-    id: 7,
+    id: 3,
     title: 'Whiplash',
     year: 2014,
     genres: <String>['Drama', 'Music'],
     rating: 8.5,
     reviewCount: 59,
     debateCount: 12,
-  ),
-  Movie(
-    id: 8,
-    title: 'Spirited Away',
-    year: 2001,
-    genres: <String>['Animation', 'Fantasy'],
-    rating: 8.7,
-    reviewCount: 73,
-    debateCount: 9,
-  ),
-  Movie(
-    id: 9,
-    title: 'Everything Everywhere All at Once',
-    year: 2022,
-    genres: <String>['Comedy', 'Sci-Fi', 'Action'],
-    rating: 7.6,
-    reviewCount: 81,
-    debateCount: 35,
-  ),
-  Movie(
-    id: 10,
-    title: 'Pulp Fiction',
-    year: 1994,
-    genres: <String>['Crime', 'Drama'],
-    rating: 8.3,
-    reviewCount: 110,
-    debateCount: 19,
+    posterUrl:
+        'https://upload.wikimedia.org/wikipedia/tr/7/7e/Whiplash_%28film%2C_2014%29.jpg',
   ),
 ];
